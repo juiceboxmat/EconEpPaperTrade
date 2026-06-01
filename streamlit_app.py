@@ -21,6 +21,7 @@ authenticator = stauth.Authenticate(
 
 # 2. LOGIN: Call this ONCE at the top of the sidebar
 authenticator.login(location='sidebar', key='unique_login_key')
+st.write(f"Debug: {st.session_state.get('authentication_status')}")
 
 # 3. Sidebar Navigation
 st.sidebar.header("Navigation")
