@@ -16,6 +16,9 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
+# This must be the very first thing in your sidebar logic
+authenticator.login(location='sidebar')
+
 # 1. Page Title
 st.set_page_config(page_title="Class Market Sim", layout="wide")
 st.title("📈 EconEp Paper Trading")
