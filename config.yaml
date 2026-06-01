@@ -1,0 +1,11 @@
+credentials:
+  usernames:
+    admin:
+      email: your-email@school.edu
+      name: "Teacher Admin"
+      password: "put_hashed_password_here"
+
+cookie:
+  expiry_days: 30
+  key: "a_very_secret_key"
+  name: "auth_cookie"
