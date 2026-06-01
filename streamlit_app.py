@@ -40,15 +40,14 @@ if page == "Market Watch":
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # Use keyword arguments to be explicit and avoid parameter order errors
+    # Call the login widget exactly once. 
+    # The result (name, status, username) is stored in st.session_state automatically.
     try:
-        # We specify location='sidebar' as a keyword argument
         authenticator.login(location='sidebar')
     except Exception as e:
         st.error(f"Login setup error: {e}")
 
-    # Access the authentication status from st.session_state
-    # This is where the library stores the result after rendering the widget
+    # Check the status from the session state
     if st.session_state.get('authentication_status'):
         st.write(f"Welcome back, {st.session_state.get('name')}!")
         st.success("You are logged in.")
