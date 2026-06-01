@@ -1,9 +1,9 @@
 credentials:
   usernames:
     admin:
-      email: your-email@school.edu
+      email: teacher@school.edu
       name: "Teacher Admin"
-      password: "put_hashed_password_here"
+      password: "$2b$12$65tWk4Vv58a5QZ/s8l0hQuxJ9167XlYl2.V6wM6X2Ld5mP7s1xP/K"
 
 cookie:
   expiry_days: 30
