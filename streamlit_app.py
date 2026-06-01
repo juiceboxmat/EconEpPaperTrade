@@ -40,22 +40,23 @@ if page == "Market Watch":
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # Try calling the login widget without the 'sidebar' parameter
-    # Streamlit-authenticator will often detect the current container automatically
+    # Use keyword arguments to be explicit and avoid parameter order errors
     try:
-        name, authentication_status, username = authenticator.login('Login')
+        # We specify location='sidebar' as a keyword argument
+        authenticator.login(location='sidebar')
     except Exception as e:
-        st.error(f"Login error: {e}")
-        name, authentication_status, username = None, None, None
+        st.error(f"Login setup error: {e}")
 
-    if authentication_status:
-        st.write(f"Welcome back, {name}!")
+    # Access the authentication status from st.session_state
+    # This is where the library stores the result after rendering the widget
+    if st.session_state.get('authentication_status'):
+        st.write(f"Welcome back, {st.session_state.get('name')}!")
         st.success("You are logged in.")
         
         if st.button('Logout'):
-            authenticator.logout('Logout', 'main')
+            authenticator.logout(location='sidebar')
             
-    elif authentication_status == False:
+    elif st.session_state.get('authentication_status') is False:
         st.error('Username/password is incorrect')
-    elif authentication_status == None:
-        st.warning('Please enter your username and password')
+    elif st.session_state.get('authentication_status') is None:
+        st.warning('Please enter your username and password in the sidebar')
