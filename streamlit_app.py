@@ -40,17 +40,18 @@ if page == "Market Watch":
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # This creates the login widget
-    name, authentication_status, username = authenticator.login('Login', 'main')
+    # The login widget now lives in the sidebar
+    name, authentication_status, username = authenticator.login('Login', 'sidebar')
 
     if authentication_status:
-        st.write(f"Welcome, {name}!")
-        st.write("You are now logged in and can view your portfolio.")
-        # You'll add your portfolio tracking logic here later
+        st.write(f"Welcome back, {name}!")
+        # This is where we will eventually put your student's portfolio table
+        st.success("You are logged in.")
+        
         if st.button('Logout'):
-            authenticator.logout('Logout', 'main')
+            authenticator.logout('Logout', 'sidebar')
             
     elif authentication_status == False:
         st.error('Username/password is incorrect')
     elif authentication_status == None:
-        st.warning('Please enter your username and password')
+        st.warning('Please enter your username and password in the sidebar')
