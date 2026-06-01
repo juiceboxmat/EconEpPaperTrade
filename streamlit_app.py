@@ -1,5 +1,19 @@
 import streamlit as st
 import yfinance as yf
+import streamlit_authenticator as stauth
+import yaml
+from yaml.loader import SafeLoader
+
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days']
+)
+
 
 # 1. Page Title
 st.set_page_config(page_title="Class Market Sim", layout="wide")
@@ -22,8 +36,21 @@ if page == "Market Watch":
         st.write(f"Current price for {ticker_symbol}:")
         st.metric(label=ticker_symbol, value=f"${data['Close'].iloc[-1]:.2f}")
 
-# 4. Placeholder for Portfolio
+# 4. Portfolio with Login Gate
 elif page == "My Portfolio":
     st.header("Your Investments")
-    st.write("Log in to see your trade history.")
     
+    # This creates the login widget
+    name, authentication_status, username = authenticator.login('Login', 'main')
+
+    if authentication_status:
+        st.write(f"Welcome, {name}!")
+        st.write("You are now logged in and can view your portfolio.")
+        # You'll add your portfolio tracking logic here later
+        if st.button('Logout'):
+            authenticator.logout('Logout', 'main')
+            
+    elif authentication_status == False:
+        st.error('Username/password is incorrect')
+    elif authentication_status == None:
+        st.warning('Please enter your username and password')
