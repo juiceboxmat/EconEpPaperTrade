@@ -40,18 +40,22 @@ if page == "Market Watch":
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # The login widget now lives in the sidebar
-    name, authentication_status, username = authenticator.login('Login', 'sidebar')
+    # Try calling the login widget without the 'sidebar' parameter
+    # Streamlit-authenticator will often detect the current container automatically
+    try:
+        name, authentication_status, username = authenticator.login('Login')
+    except Exception as e:
+        st.error(f"Login error: {e}")
+        name, authentication_status, username = None, None, None
 
     if authentication_status:
         st.write(f"Welcome back, {name}!")
-        # This is where we will eventually put your student's portfolio table
         st.success("You are logged in.")
         
         if st.button('Logout'):
-            authenticator.logout('Logout', 'sidebar')
+            authenticator.logout('Logout', 'main')
             
     elif authentication_status == False:
         st.error('Username/password is incorrect')
     elif authentication_status == None:
-        st.warning('Please enter your username and password in the sidebar')
+        st.warning('Please enter your username and password')
