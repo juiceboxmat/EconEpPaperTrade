@@ -4,14 +4,12 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 
-# 1. Page Configuration (Must be first)
+# 1. Setup
 st.set_page_config(page_title="Class Market Sim", layout="wide")
 
-# 2. Load Config
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
-# 3. Initialize Authenticator
 authenticator = stauth.Authenticate(
     config['credentials'],
     config['cookie']['name'],
@@ -19,15 +17,15 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-# 4. Login Widget (Only called once, with a forced unique key)
-# The key 'unique_auth_form' prevents the duplicate form exception.
-authenticator.login(location='sidebar', key='unique_auth_form')
+# 2. LOGIN WIDGET: Only call this once!
+# Using a unique key prevents the "multiple identical forms" error.
+authenticator.login(location='sidebar', key='unique_login_form')
 
-# 5. Sidebar Navigation
+# 3. Sidebar Navigation
 st.sidebar.header("Navigation")
 page = st.sidebar.radio("Go to", ["Market Watch", "My Portfolio"])
 
-# 6. Main App Content
+# 4. Content
 st.title("📈 EconEp Paper Trading")
 
 if page == "Market Watch":
@@ -41,7 +39,7 @@ if page == "Market Watch":
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # Check status from session_state
+    # Check the status after the single login call above
     if st.session_state.get('authentication_status'):
         st.write(f"Welcome back, {st.session_state.get('name')}!")
         st.success("You are successfully logged in.")
