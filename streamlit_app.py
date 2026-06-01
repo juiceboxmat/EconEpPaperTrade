@@ -41,12 +41,14 @@ if page == "Market Watch":
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # Check session state (the .login() call above already populated this)
+    # 1. Check if user is ALREADY logged in
     if st.session_state.get('authentication_status'):
         st.write(f"Welcome back, {st.session_state.get('name')}!")
-        st.success("You are logged in.")
         if st.button('Logout'):
             authenticator.logout(location='sidebar')
+            st.rerun() # Forces the page to refresh after logout
+            
+    # 2. If NOT logged in, show the status
     elif st.session_state.get('authentication_status') is False:
         st.error('Username/password is incorrect')
     elif st.session_state.get('authentication_status') is None:
