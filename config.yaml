@@ -3,7 +3,8 @@ credentials:
     admin:
       email: teacher@school.edu
       name: "Admin"
-      password: "$2b$12$65tWk4Vv58a5QZ/s8l0hQuxJ9167XlYl2.V6wM6X2Ld5mP7s1xP/K"
+      password: "$2b$12$erDymWBmdZyn98F7MGgqcOQzdfnmOCB09tJ8jMHmLHpaBlvVb1cE2"
+
 cookie:
   expiry_days: 30
   key: "some_secret_random_key_12345"
