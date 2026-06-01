@@ -16,6 +16,13 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
+# LOGIN ALWAYS IN SIDEBAR
+# The 'key' argument prevents the duplicate form error.
+authenticator.login(location='sidebar', key='login_widget')
+
+# 2. Sidebar for navigation
+st.sidebar.header("Navigation")
+
 # This must be the very first thing in your sidebar logic
 authenticator.login(location='sidebar')
 
