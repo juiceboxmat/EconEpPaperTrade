@@ -4,9 +4,11 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 
+# Load config
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
+# Initialize authenticator
 authenticator = stauth.Authenticate(
     config['credentials'],
     config['cookie']['name'],
@@ -14,10 +16,13 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-
 # 1. Page Title
 st.set_page_config(page_title="Class Market Sim", layout="wide")
 st.title("📈 EconEp Paper Trading")
+
+# --- LOGIN ALWAYS IN SIDEBAR ---
+# By calling this here, it is outside the "page" logic, so it never disappears.
+authenticator.login(location='sidebar')
 
 # 2. Sidebar for navigation
 st.sidebar.header("Navigation")
@@ -26,28 +31,13 @@ page = st.sidebar.radio("Go to", ["Market Watch", "My Portfolio"])
 # 3. Simple Mock Logic for "Market Watch"
 if page == "Market Watch":
     st.header("Live Market News")
-    st.write("Welcome to the class simulation! Check back here for updates.")
-    
-    # Quick example of pulling data using yfinance
-    ticker_symbol = st.text_input("Enter Ticker (e.g., AAPL, TSLA)", "AAPL")
-    if ticker_symbol:
-        stock = yf.Ticker(ticker_symbol)
-        data = stock.history(period="1d")
-        st.write(f"Current price for {ticker_symbol}:")
-        st.metric(label=ticker_symbol, value=f"${data['Close'].iloc[-1]:.2f}")
+    # ... (your existing code) ...
 
-# 4. Portfolio with Login Gate
+# 4. Portfolio Page
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # Call the login widget exactly once. 
-    # The result (name, status, username) is stored in st.session_state automatically.
-    try:
-        authenticator.login(location='sidebar')
-    except Exception as e:
-        st.error(f"Login setup error: {e}")
-
-    # Check the status from the session state
+    # Check status from the session state (now populated by the call above)
     if st.session_state.get('authentication_status'):
         st.write(f"Welcome back, {st.session_state.get('name')}!")
         st.success("You are logged in.")
@@ -58,4 +48,4 @@ elif page == "My Portfolio":
     elif st.session_state.get('authentication_status') is False:
         st.error('Username/password is incorrect')
     elif st.session_state.get('authentication_status') is None:
-        st.warning('Please enter your username and password in the sidebar')
+        st.warning('Please log in using the sidebar')
