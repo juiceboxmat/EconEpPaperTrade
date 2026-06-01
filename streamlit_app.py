@@ -26,4 +26,4 @@ if page == "Market Watch":
 elif page == "My Portfolio":
     st.header("Your Investments")
     st.write("Log in to see your trade history.")
-    # We will build the login logic here in the next step!
+    
