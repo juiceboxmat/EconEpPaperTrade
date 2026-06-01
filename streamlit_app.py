@@ -4,14 +4,14 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 
-# 1. Page Config must be the first Streamlit command
+# 1. Page Configuration (Must be first)
 st.set_page_config(page_title="Class Market Sim", layout="wide")
 
-# Load config
+# 2. Load Config
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
-# Initialize authenticator
+# 3. Initialize Authenticator
 authenticator = stauth.Authenticate(
     config['credentials'],
     config['cookie']['name'],
@@ -19,37 +19,35 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-# 2. LOGIN: Call this ONCE at the top of the sidebar
-authenticator.login(location='sidebar', key='unique_login_key')
-st.write(f"Debug: {st.session_state.get('authentication_status')}")
+# 4. Login Widget (Only called once, with a forced unique key)
+# The key 'unique_auth_form' prevents the duplicate form exception.
+authenticator.login(location='sidebar', key='unique_auth_form')
 
-# 3. Sidebar Navigation
+# 5. Sidebar Navigation
 st.sidebar.header("Navigation")
 page = st.sidebar.radio("Go to", ["Market Watch", "My Portfolio"])
 
+# 6. Main App Content
 st.title("📈 EconEp Paper Trading")
 
-# 4. Logic for "Market Watch"
 if page == "Market Watch":
     st.header("Live Market News")
-    ticker_symbol = st.text_input("Enter Ticker (e.g., AAPL)", "AAPL")
-    if ticker_symbol:
-        stock = yf.Ticker(ticker_symbol)
+    ticker = st.text_input("Enter Ticker", "AAPL")
+    if ticker:
+        stock = yf.Ticker(ticker)
         data = stock.history(period="1d")
-        st.metric(label=ticker_symbol, value=f"${data['Close'].iloc[-1]:.2f}")
+        st.metric(label=ticker, value=f"${data['Close'].iloc[-1]:.2f}")
 
-# 5. Portfolio Page
 elif page == "My Portfolio":
     st.header("Your Investments")
     
-    # 1. Check if user is ALREADY logged in
+    # Check status from session_state
     if st.session_state.get('authentication_status'):
         st.write(f"Welcome back, {st.session_state.get('name')}!")
+        st.success("You are successfully logged in.")
         if st.button('Logout'):
             authenticator.logout(location='sidebar')
-            st.rerun() # Forces the page to refresh after logout
-            
-    # 2. If NOT logged in, show the status
+            st.rerun()
     elif st.session_state.get('authentication_status') is False:
         st.error('Username/password is incorrect')
     elif st.session_state.get('authentication_status') is None:
